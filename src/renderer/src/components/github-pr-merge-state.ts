@@ -32,6 +32,8 @@ export type GitHubPRMergeStatePresentation = {
   tooltip: string
   directMergeAvailable: boolean
   autoMergeAction: GitHubPRAutoMergeAction | null
+  // Set when the head branch is behind base and GitHub's "Update branch" applies.
+  updateBranchAvailable?: boolean
 }
 
 const MUTED_TONE = 'border-border/60 bg-background/70 text-muted-foreground'
@@ -241,7 +243,8 @@ export function presentGitHubPRMergeState(
         'Update the branch before merging'
       ),
       directMergeAvailable: false,
-      autoMergeAction
+      autoMergeAction,
+      updateBranchAvailable: true
     }
   }
   if (item.mergeStateStatus === 'BLOCKED') {
