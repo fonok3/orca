@@ -8,7 +8,7 @@ import {
 import { resolveGitHubRepoExecution, type GitHubApiRepository } from '../../github-api-repository'
 import { getPRAutoMergeIdentity } from './pr-auto-merge'
 
-// Why: GitHub rejects update-branch when the head is already current; surface an actionable message instead of the raw API error.
+/** Map a raw gh update-branch failure to an actionable message (e.g. already-up-to-date). */
 export function classifyUpdatePRBranchError(message: string): string {
   if (/up[\s-]?to[\s-]?date/i.test(message)) {
     return 'This branch is already up to date with the base branch.'
@@ -42,6 +42,13 @@ export async function updatePRBranch(
     if (!pr?.id) {
       return { ok: false, error: 'Could not resolve GitHub pull request ID' }
     }
+    // Why: without expectedHeadOid the update runs unguarded and could clobber a newer push, so refuse rather than proceed.
+    if (!pr.headRefOid) {
+      return {
+        ok: false,
+        error: 'Could not resolve the pull request head commit; refresh and try again.'
+      }
+    }
     const query = `mutation($pullRequestId: ID!, $expectedHeadOid: GitObjectID) {
     updatePullRequestBranch(input: {
       pullRequestId: $pullRequestId,
@@ -50,10 +57,16 @@ export async function updatePRBranch(
       pullRequest { id }
     }
   }`
-    const args = ['api', 'graphql', '-f', `query=${query}`, '-f', `pullRequestId=${pr.id}`]
-    if (pr.headRefOid) {
-      args.push('-f', `expectedHeadOid=${pr.headRefOid}`)
-    }
+    const args = [
+      'api',
+      'graphql',
+      '-f',
+      `query=${query}`,
+      '-f',
+      `pullRequestId=${pr.id}`,
+      '-f',
+      `expectedHeadOid=${pr.headRefOid}`
+    ]
     await ghExecFileAsync(args, {
       ...ghOptions,
       env: { ...process.env, GH_PROMPT_DISABLED: '1' }

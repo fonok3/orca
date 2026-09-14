@@ -289,6 +289,29 @@ describe('GitHub GraphQL rate-limit guard', () => {
     expect(ghExecFileAsyncMock.mock.calls[1]?.[0]?.[3]).toContain('updatePullRequestBranch')
   })
 
+  it('refuses to update the branch when GitHub does not return a head commit', async () => {
+    ghExecFileAsyncMock.mockResolvedValueOnce({
+      stdout: JSON.stringify({ id: 'PR_kwDO123', baseRefName: 'main' })
+    })
+
+    await expect(
+      updatePRBranch('/repo-root', 7, undefined, {
+        owner: 'stablyai',
+        repo: 'orca',
+        host: 'github.com'
+      })
+    ).resolves.toEqual({
+      ok: false,
+      error: 'Could not resolve the pull request head commit; refresh and try again.'
+    })
+
+    // Only the identity lookup ran; no unguarded graphql mutation was sent.
+    expect(ghExecFileAsyncMock).toHaveBeenCalledTimes(1)
+    expect(
+      ghExecFileAsyncMock.mock.calls.some((call) => (call[0] as string[]).includes('graphql'))
+    ).toBe(false)
+  })
+
   it('translates the already-up-to-date rejection into an actionable message', async () => {
     ghExecFileAsyncMock
       .mockResolvedValueOnce({
