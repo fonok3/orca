@@ -89,7 +89,19 @@ function passedChecksMergePresentation(
   }
 }
 
+// Why: GitHub offers "Update branch" whenever the head is behind base, even when
+// review or other blockers also apply — so derive it from mergeStateStatus alone,
+// independent of which blocker the base presentation returned first.
 export function presentGitHubPRMergeState(
+  item: GitHubPRMergeStateInput
+): GitHubPRMergeStatePresentation {
+  return {
+    ...computeGitHubPRMergeStatePresentation(item),
+    updateBranchAvailable: item.mergeStateStatus === 'BEHIND'
+  }
+}
+
+function computeGitHubPRMergeStatePresentation(
   item: GitHubPRMergeStateInput
 ): GitHubPRMergeStatePresentation {
   const autoMergeAction =
@@ -243,8 +255,7 @@ export function presentGitHubPRMergeState(
         'Update the branch before merging'
       ),
       directMergeAvailable: false,
-      autoMergeAction,
-      updateBranchAvailable: true
+      autoMergeAction
     }
   }
   if (item.mergeStateStatus === 'BLOCKED') {

@@ -5,7 +5,7 @@ import type { PRInfo } from '../../../../shared/github/pull-request-types'
 import type { Repo } from '../../../../shared/repo-types'
 import { updateGitHubHostedReviewBranch } from './hosted-review-github-actions'
 
-// GitHub-only "Update branch" for the right-sidebar hosted-review actions.
+/** GitHub-only "Update branch" action for the right-sidebar hosted-review actions. */
 export function useHostedReviewUpdateBranch({
   reviewNumber,
   githubPR,
