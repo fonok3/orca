@@ -1890,7 +1890,8 @@
         "diffLoadTimedOut": "Timed out loading this diff.",
         "updateBranch": "Update branch",
         "updateBranchSucceeded": "Branch update started",
-        "updateBranchFailed": "Failed to update branch"
+        "updateBranchFailed": "Failed to update branch",
+        "updateBranchServerUpdateRequired": "Updating a pull request branch requires a newer Orca server. Update the server and try again."
       },
       "QuickOpen": {
         "1dbd3f59ff": "Move",
@@ -12048,7 +12049,8 @@
             "closeDraft": "Close",
             "readyToast": "{{value0}} marked ready for review",
             "updateBranch": "Update branch",
-            "updateBranchSucceeded": "Branch update started"
+            "updateBranchSucceeded": "Branch update started",
+            "updateBranchServerUpdateRequired": "Updating a pull request branch requires a newer Orca server. Update the server and try again."
           },
           "PortsPanel": {
             "3ea4a02a8f": "Cancel",

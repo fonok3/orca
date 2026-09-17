@@ -4,14 +4,14 @@ import { getRepoExecutionHostId, parseExecutionHostId } from '../../../../shared
 import {
   GITHUB_MARK_PR_READY_RUNTIME_CAPABILITY,
   GITHUB_MARK_PR_READY_UPDATE_REQUIRED_MESSAGE,
-  GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY,
-  GITHUB_UPDATE_PR_BRANCH_UPDATE_REQUIRED_MESSAGE
+  GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY
 } from '../../../../shared/protocol-version'
 import {
   assertRuntimeEnvironmentCapability,
   callRuntimeRpc,
   type RuntimeClientTarget
 } from '@/runtime/runtime-rpc-client'
+import { translate } from '@/i18n/i18n'
 
 type GitHubPRRepo = PRInfo['prRepo']
 
@@ -97,7 +97,10 @@ export async function updateGitHubHostedReviewBranch(args: {
     await assertRuntimeEnvironmentCapability(
       target.environmentId,
       GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY,
-      GITHUB_UPDATE_PR_BRANCH_UPDATE_REQUIRED_MESSAGE
+      translate(
+        'auto.components.right.sidebar.HostedReviewActions.updateBranchServerUpdateRequired',
+        'Updating a pull request branch requires a newer Orca server. Update the server and try again.'
+      )
     )
     return callRuntimeRpc<Awaited<ReturnType<typeof window.api.gh.updatePRBranch>>>(
       target,

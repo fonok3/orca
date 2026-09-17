@@ -4,10 +4,7 @@ import type { RuntimeClientTarget } from '@/runtime/runtime-client-target'
 import { notifyWorkItemDetailsMutation } from '@/components/github/github-work-item-comment-mutations'
 import { getGitHubRuntimeRepoId } from '@/lib/github-source-runtime-context'
 import { translate } from '@/i18n/i18n'
-import {
-  GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY,
-  GITHUB_UPDATE_PR_BRANCH_UPDATE_REQUIRED_MESSAGE
-} from '../../../../../shared/protocol-version'
+import { GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY } from '../../../../../shared/protocol-version'
 import type { GitHubOwnerRepo } from '../../../../../shared/github/pull-request-types'
 import type { GitHubWorkItem } from '../../../../../shared/github/work-item-types'
 import type { TaskSourceContext } from '../../../../../shared/task-source-context'
@@ -29,7 +26,10 @@ export async function updatePullRequestBranch(args: {
       await assertRuntimeEnvironmentCapability(
         args.mergeTarget.environmentId,
         GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY,
-        GITHUB_UPDATE_PR_BRANCH_UPDATE_REQUIRED_MESSAGE
+        translate(
+          'auto.components.PullRequestPage.updateBranchServerUpdateRequired',
+          'Updating a pull request branch requires a newer Orca server. Update the server and try again.'
+        )
       )
     }
     const result =

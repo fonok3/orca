@@ -195,8 +195,6 @@ export const GITHUB_MARK_PR_READY_UPDATE_REQUIRED_MESSAGE =
   'Marking a pull request ready requires a newer Orca server. Update the server and try again.'
 // Hosts without this capability have no github.updatePRBranch RPC.
 export const GITHUB_UPDATE_PR_BRANCH_RUNTIME_CAPABILITY = 'github.updatePRBranch' as const
-export const GITHUB_UPDATE_PR_BRANCH_UPDATE_REQUIRED_MESSAGE =
-  'Updating a pull request branch requires a newer Orca server. Update the server and try again.'
 export const GITLAB_READY_FOR_REVIEW_RUNTIME_CAPABILITY =
   'gitlab.updateMR.readyForReview.v1' as const
 export const GITLAB_READY_FOR_REVIEW_UPDATE_REQUIRED_MESSAGE =
