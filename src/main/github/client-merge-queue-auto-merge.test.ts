@@ -312,25 +312,6 @@ describe('GitHub GraphQL rate-limit guard', () => {
     ).toBe(false)
   })
 
-  it('translates the already-up-to-date rejection into an actionable message', async () => {
-    ghExecFileAsyncMock
-      .mockResolvedValueOnce({
-        stdout: JSON.stringify({ id: 'PR_kwDO123', headRefOid: 'head-oid', baseRefName: 'main' })
-      })
-      .mockRejectedValueOnce(new Error('GraphQL: The branch is already up to date'))
-
-    await expect(
-      updatePRBranch('/repo-root', 7, undefined, {
-        owner: 'stablyai',
-        repo: 'orca',
-        host: 'github.com'
-      })
-    ).resolves.toEqual({
-      ok: false,
-      error: 'This branch is already up to date with the base branch.'
-    })
-  })
-
   it('translates the GitHub clean-status rejection into an actionable message', async () => {
     ghExecFileAsyncMock
       .mockResolvedValueOnce({ stdout: JSON.stringify({ stack: null }) })

@@ -97,7 +97,7 @@ export function presentGitHubPRMergeState(
 ): GitHubPRMergeStatePresentation {
   return {
     ...computeGitHubPRMergeStatePresentation(item),
-    updateBranchAvailable: item.mergeStateStatus === 'BEHIND'
+    updateBranchAvailable: item.state === 'open' && item.mergeStateStatus === 'BEHIND'
   }
 }
 

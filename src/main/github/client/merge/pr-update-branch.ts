@@ -8,14 +8,6 @@ import {
 import { resolveGitHubRepoExecution, type GitHubApiRepository } from '../../github-api-repository'
 import { getPRAutoMergeIdentity } from './pr-auto-merge'
 
-/** Map a raw gh update-branch failure to an actionable message (e.g. already-up-to-date). */
-export function classifyUpdatePRBranchError(message: string): string {
-  if (/up[\s-]?to[\s-]?date/i.test(message)) {
-    return 'This branch is already up to date with the base branch.'
-  }
-  return classifyGhError(message).message
-}
-
 /**
  * Merge the base branch into a PR's head branch (GitHub's "Update branch").
  * Guards on the fetched head OID so a stale UI cannot clobber a newer push.
@@ -75,7 +67,7 @@ export async function updatePRBranch(
   } catch (err) {
     const message =
       err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'
-    return { ok: false, error: classifyUpdatePRBranchError(message) }
+    return { ok: false, error: classifyGhError(message).message }
   } finally {
     release()
   }

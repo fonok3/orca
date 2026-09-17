@@ -203,6 +203,15 @@ describe('presentGitHubPRMergeState', () => {
     expect(presentGitHubPRMergeState(pr({ mergeStateStatus: 'CLEAN' })).updateBranchAvailable).toBe(
       false
     )
+    // A closed or merged PR that is still marked behind must not offer the action.
+    expect(
+      presentGitHubPRMergeState(pr({ state: 'closed', mergeStateStatus: 'BEHIND' }))
+        .updateBranchAvailable
+    ).toBe(false)
+    expect(
+      presentGitHubPRMergeState(pr({ state: 'merged', mergeStateStatus: 'BEHIND' }))
+        .updateBranchAvailable
+    ).toBe(false)
   })
 
   it('labels unresolved GitHub mergeability as checking', () => {
